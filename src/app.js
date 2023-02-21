@@ -1,4 +1,5 @@
-const { MongoClient } = require("mongodb");
+import { MongoClient } from "mongodb";
+import bulkWriteInsert  from "./queries/bulkWriteInsert.js";
 
 // Replace the uri string with your connection string.
 const uri =
@@ -9,22 +10,11 @@ const client = new MongoClient(uri);
 async function run() {
     try {
         const database = client.db("sandbox");
-        console.log("connected");
-
         const clients = database.collection("clients");
 
-        const newClient = {
-            name: "Phil Vigus",
-            age: 47
-        }
+        await bulkWriteInsert(clients, 100);
 
-        const savedClientId = await clients.insertOne(newClient);
-
-        console.log(savedClientId)
-
-        // const movie = await movies.findOne(query);
     } finally {
-        // Ensures that the client will close when you finish/error
         await client.close();
     }
 }
